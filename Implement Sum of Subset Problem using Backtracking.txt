@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+int a[100];
+int subset[100];
+int result[100][100];
+int sizes[100];
+
+int n, target;
+int resultCount = 0;
+
+void findSubsets(int index, int sum, int size)
+{
+    if (sum == target)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            result[resultCount][i] = subset[i];
+        }
+
+        sizes[resultCount] = size;
+        resultCount++;
+        return;
+    }
+
+    if (index >= n)
+        return;
+
+    /* Include current element */
+    subset[size] = a[index];
+    findSubsets(index + 1, sum + a[index], size + 1);
+
+    /* Exclude current element */
+    findSubsets(index + 1, sum, size);
+}
+
+int main()
+{
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+
+    scanf("%d", &target);
+
+    findSubsets(0, 0, 0);
+
+    if (resultCount == 0)
+    {
+        printf("-1");
+    }
+    else
+    {
+        /* Reverse order of discovery */
+        for (int i = resultCount - 1; i >= 0; i--)
+        {
+            for (int j = 0; j < sizes[i]; j++)
+            {
+                printf("%d ", result[i][j]);
+            }
+            printf("\n");
+        }
+    }
+
+    return 0;
+}
